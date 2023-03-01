@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       outlet.hasOne(models.user, {
         as: "user",
-        foreignKey: "id_outlet",
+        foreignKey: "idOutlet",
       });
     }
   }

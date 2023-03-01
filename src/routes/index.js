@@ -1,58 +1,33 @@
-const express = require("express");
-// const {
-//   getListProduk,
-//   createProduk,
-//   getListProdukById,
-//   getDetailProdukByParams,
-//   deleteProduk,
-// } = require("../controller/ProdukController");
+const express = require('express');
 const {
-  register,
   login,
   updatePassword,
   lupaPassword,
   lupaPasswordTugas,
   lupaPasswordEmail,
-} = require("../controller/authController");
-// const {
-//   getListUser,
-//   getListUserById,
-//   getDetailUserByParams,
-//   createUser,
-//   updateUser,
-//   deleteUser,
-// } = require("../controller/UserController");
-const validationResultMiddleware = require("../middleware/validationResultMiddleware");
-const createProdukValidator = require("../validators/produkValidator");
+} = require('../controller/authController');
+const validationResultMiddleware = require('../middleware/validationResultMiddleware');
+const createProdukValidator = require('../validators/produkValidator');
 const {
   createUserValidator,
   updateUserValidator,
   updateNewPassword,
-} = require("../validators/userValidator");
-const jwtValidateMiddleware = require("../middleware/JwtValidateMiddleware");
-// const {
-//   createArtikel,
-//   getArtikel,
-//   updateArtikel,
-//   deleteArtikel,
-//   creatingArtikelBulk,
-//   createArtikelMulti,
-//   deleteArtikelMulti,
-// } = require("../controller/artikelController");
-// const getListNilai = require("../controller/nilaiController");
+} = require('../validators/userValidator');
+const jwtValidateMiddleware = require('../middleware/JwtValidateMiddleware');
 const routers = express.Router();
+const cors = require('cors');
 
 // *--- AUTH
-routers.post("/register", register);
-routers.post("/login", login);
-routers.post("/lupa-password", lupaPassword);
-routers.put("/reset-password/:userId/:token", lupaPasswordEmail);
+routers.use(cors());
+routers.post('/login', login);
+routers.post('/lupa-password', lupaPassword);
+routers.put('/reset-password/:userId/:token', lupaPasswordEmail);
 
 // *--- implementasi JWT(json web token) validate middleware
 routers.use(jwtValidateMiddleware);
 
 routers.put(
-  "/update-password",
+  '/update-password',
   updateNewPassword,
   validationResultMiddleware,
   updatePassword

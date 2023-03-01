@@ -7,7 +7,7 @@ var jwt = require("jsonwebtoken");
 const sendEmailHandle = require("../mail/index");
 require("dotenv").config;
 
-async function register(req, res) {
+async function login(req, res) {
   try {
     const payload = req.body;
     const { nama, username, password, id_outlet, role } = payload;
@@ -23,7 +23,7 @@ async function register(req, res) {
     });
     res.json({
       status: "berhasil",
-      msg: "berhasil register",
+      msg: "berhasil login",
     });
   } catch (err) {
     console.log(err)
@@ -34,65 +34,65 @@ async function register(req, res) {
   }
 }
 
-async function login(req, res) {
-  try {
-    const payload = req.body;
-    const { username, password } = payload;
+// async function login(req, res) {
+//   try {
+//     const payload = req.body;
+//     const { username, password } = payload;
 
-    const user = await UserModel.findOne({
-      where: {
-        username: username,
-      },
-    });
+//     const user = await UserModel.findOne({
+//       where: {
+//         username: username,
+//       },
+//     });
 
-    if (user === null) {
-      res.status(422).json({
-        status: "gagal",
-        msg: "email tidak ditemukan, silahkan register",
-      });
-    }
+//     if (user === null) {
+//       res.status(422).json({
+//         status: "gagal",
+//         msg: "user tidak ditemukan, silahkan register",
+//       });
+//     }
 
-    // if (password === null) {
-    //   return res.status(422).json({
-    //     status: "gagal",
-    //     msg: "email dan password tidak cocok",
-    //   });
-    // }
+//     // if (password === null) {
+//     //   return res.status(422).json({
+//     //     status: "gagal",
+//     //     msg: "email dan password tidak cocok",
+//     //   });
+//     // }
 
-    const verify = await bcrypt.compareSync(password, user.password);
+//     const verify = await bcrypt.compareSync(password, user.password);
 
-    const token = await jwt.sign(
-      {
-        id: user?.id,
-        email: user?.email,
-        name: user?.name,
-      },
-      process.env.JWT_SCRIPT,
-      {
-        expiresIn: "7d",
-      }
-    );
+//     const token = await jwt.sign(
+//       {
+//         id: user?.id,
+//         email: user?.email,
+//         name: user?.name,
+//       },
+//       process.env.JWT_SCRIPT,
+//       {
+//         expiresIn: "7d",
+//       }
+//     );
 
-    if (!verify) {
-      return res.status(422).json({
-        status: "gagal",
-        msg: "email dan password tidak cocok",
-      });
-    }
+//     if (!verify) {
+//       return res.status(422).json({
+//         status: "gagal",
+//         msg: "email dan password tidak cocok",
+//       });
+//     }
 
-    res.json({
-      status: "berhasil",
-      msg: "berhasil login",
-      token: token,
-      user: user,
-    });
-  } catch (err) {
-    res.status(403).json({
-      status: "gagal",
-      msg: "Ada kesalahan",
-    });
-  }
-}
+//     res.json({
+//       status: "berhasil",
+//       msg: "berhasil login",
+//       token: token,
+//       user: user,
+//     });
+//   } catch (err) {
+//     res.status(403).json({
+//       status: "gagal",
+//       msg: "Ada kesalahan",
+//     });
+//   }
+// }
 
 async function updatePassword(req, res) {
   try {
@@ -148,83 +148,6 @@ async function updatePassword(req, res) {
   }
 }
 
-// async function lupaPassword(req, res) {
-//   try {
-//     const { email } = req.body;
-
-//     //* --- cek apakah user dengan email tsb terdaftar
-//     const user = await UserModel.findOne({
-//       where: {
-//         email: email,
-//       },
-//     });
-//     //* --- jika tidak terdaftar berikan response dengan msg email tidak terdaftar
-//     if (user == null) {
-//       return res.status(403).json({
-//         status: "fail",
-//         msg: "email tidak terdaftar,silahkan gunakan email yang terdaftar",
-//       });
-//     }
-//     //* --- cek apakah token sudah pernah dibuat pada user tsb di table forgot password
-//     const currentToken = await ForgotPasswordModel.findOne({
-//       where: {
-//         userId: user.id,
-//       },
-//     });
-
-//     //* --- jika ada, hapus token
-//     if (currentToken !== null) {
-//       await ForgotPasswordModel.destroy({
-//         where: {
-//           userId: user.id,
-//         },
-//       });
-//     }
-//     //* --- jika belum buat token
-
-//     const token = crypto.randomBytes(32).toString("hex");
-//     const date = new Date();
-//     const expire = date.setHours(date.getHours() + 1);
-
-//     await ForgotPasswordModel.create({
-//       userId: user.id,
-//       token: token,
-//       expireDate: dayjs(expire).format("YYYY-MM-DD hh:mm:ss"),
-//     });
-
-//     const context = {
-//       link: "https://pas-react-alfarabi.netlify.app/forgotPassword",
-//     };
-//     const sendEmail = await sendEmailHandle(
-//       email,
-//       "lupa password",
-//       "lupaPassword",
-//       context
-//     );
-
-//     if (sendEmail === "success") {
-//       res.json({
-//         status: "success",
-//         msg: "silahkan cek email",
-//       });
-//     } else {
-//       res.json({
-//         status: "fail",
-//         msg: "gunakan email yang terdaftar",
-//       });
-//     }
-
-//     res.json({
-//       status: 200,
-//       msg: "berhasil",
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(403).json({
-//       msg: "gagal",
-//     });
-//   }
-// }
 
 async function lupaPassword(req, res) {
   // let date = new Date()
@@ -364,7 +287,6 @@ async function lupaPasswordEmail(req, res) {
 }
 
 module.exports = {
-  register,
   login,
   updatePassword,
   lupaPassword,

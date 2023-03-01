@@ -20,7 +20,7 @@ module.exports = {
       jenis_kelamin: {
         type: Sequelize.ENUM,
         allowNull: false,
-        values: ["l", "p"],
+        values: ["L", "p"],
       },
       tlp: {
         type: Sequelize.STRING(15),
